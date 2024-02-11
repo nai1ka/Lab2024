@@ -7,7 +7,8 @@
     android:orientation="vertical"
     android:padding="26dp"
     android:visibility="gone"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -22,9 +23,13 @@
         android:layout_marginBottom="32dp"
         android:text="Произошла ошибка при загрузке данных, проверьте подключение к сети" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:backgroundTint="#0094FF"
+        android:padding="14dp"
+        android:textSize="14sp"
+        app:cornerRadius="100px"
         android:text="Повторить" />
 </LinearLayout>

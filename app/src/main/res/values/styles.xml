@@ -14,5 +14,12 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
+    <style name="MyThemeOverlay_Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <!-- color used by navigation icon and overflow icon -->
+        <item name="colorOnPrimary">#0094FF</item>
+    </style>
+
+
+
 
 </resources>

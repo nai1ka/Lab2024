@@ -10,8 +10,6 @@ class MovieEntity(
     @ColumnInfo(name = "nameRu") val nameRu: String?,
     @ColumnInfo(name = "genre") val genre: String?,
     @ColumnInfo(name = "year") val year: String?,
-
-
 ) {
     constructor(movie: Movie) : this(
         movie.filmId,

@@ -1,4 +1,4 @@
-package ru.ndevelop.tinkofflab2024
+package ru.ndevelop.tinkofflab2024.data
 
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -11,7 +11,7 @@ import ru.ndevelop.tinkofflab2024.models.Movie
 import ru.ndevelop.tinkofflab2024.models.Response
 
 object ApiClient {
-    val BASE_URL = "https://kinopoiskapiunofficial.tech"
+    private const val BASE_URL = "https://kinopoiskapiunofficial.tech"
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
@@ -24,9 +24,7 @@ object ApiClient {
     }
 }
 
-
 interface MyApiEndpointInterface {
-
     @Headers("x-api-key: e30ffed0-76ab-4dd6-b41f-4c9da2b2735b")
     @GET("/api/v2.2/films/top")
     fun getTop(@Query("type") type: String): Call<Response>

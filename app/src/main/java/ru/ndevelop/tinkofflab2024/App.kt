@@ -1,13 +1,13 @@
 package ru.ndevelop.tinkofflab2024
 
 import android.app.Application
-import androidx.room.Room
-import ru.ndevelop.tinkofflab2024.models.AppDatabase
+import ru.ndevelop.tinkofflab2024.data.LocalRepository
+import ru.ndevelop.tinkofflab2024.data.WebRepository
 
 class App : Application() {
-
     override fun onCreate() {
         super.onCreate()
-        Repository.createDatabase(this)
+        LocalRepository.createDatabase(this)
+        WebRepository.applicationContext = this
     }
 }

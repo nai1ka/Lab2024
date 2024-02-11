@@ -1,4 +1,4 @@
-package ru.ndevelop.tinkofflab2024
+package ru.ndevelop.tinkofflab2024.adapters
 
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
@@ -7,22 +7,24 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.ndevelop.tinkofflab2024.R
+import ru.ndevelop.tinkofflab2024.data.CacheManager
+import ru.ndevelop.tinkofflab2024.data.LocalRepository
 import ru.ndevelop.tinkofflab2024.models.Movie
 import java.lang.Exception
 import java.net.URL
 
 
 class MovieListAdapter(
-    private val onMovieClick: (Int) -> Unit
+    private val onMovieClick: ((Int) -> Unit)?
 ) : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
     private var dataSet: List<Movie> = listOf()
-    val adapterScope = CoroutineScope(Dispatchers.Default)
+    private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvMovieName: TextView
@@ -39,21 +41,19 @@ class MovieListAdapter(
             shimmer = view.findViewById(R.id.shimmer_preview)
         }
     }
-
-    // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view, which defines the UI of the list item
         val view =
             LayoutInflater.from(viewGroup.context).inflate(R.layout.single_movie, viewGroup, false)
 
         return ViewHolder(view)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+    override fun onViewRecycled(holder: ViewHolder) {
+        super.onViewRecycled(holder)
+        holder.previewImage.setImageBitmap(null)
+    }
 
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.shimmer.apply {
             startShimmer()
             visibility = View.VISIBLE
@@ -65,23 +65,22 @@ class MovieListAdapter(
         viewHolder.favouriteImage.visibility =
             if (dataSet[position].isFavourite) View.VISIBLE else View.GONE
 
-        if (MovieCacheManager.isInCache(filmId)) {
-            viewHolder.previewImage.setImageBitmap(MovieCacheManager.getCachedPreview(filmId))
+        if (CacheManager.isPreviewInCache(filmId)) {
+            viewHolder.previewImage.setImageBitmap(CacheManager.getCachedPreview(filmId))
         } else {
             if (dataSet[position].posterUrlPreview != null) {
                 val networkScope = CoroutineScope(Dispatchers.IO)
-                // Launch a new coroutine in the scope
                 networkScope.launch {
                     try {
                         val url = URL(dataSet[position].posterUrlPreview)
                         val imageData = url.readBytes()
                         val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
-                        MovieCacheManager.addPreview(filmId, bitmap)
+                        CacheManager.addPreview(filmId, bitmap)
                         withContext(Dispatchers.Main) {
                             viewHolder.previewImage.setImageBitmap(bitmap)
                             viewHolder.shimmer.apply {
                                 stopShimmer()
-                                visibility=View.GONE
+                                visibility = View.GONE
                             }
                         }
                     } catch (e: Exception) {
@@ -94,30 +93,24 @@ class MovieListAdapter(
         }
 
         viewHolder.itemView.setOnClickListener {
-            onMovieClick(position)
+            if (onMovieClick != null) {
+                onMovieClick!!.invoke(dataSet[position].filmId)
+            }
         }
         viewHolder.itemView.setOnLongClickListener {
-
             adapterScope.launch {
-                val wasFavourite = Repository.isFavourite(dataSet[position].filmId)
-                if(wasFavourite){
-                    Repository.deleteMovie(filmId)
-                }
-                else{
-                    Repository.updateMovie(dataSet[position])
-                }
-                withContext(Dispatchers.Main) {
-                    if (wasFavourite) {
-                        viewHolder.favouriteImage.visibility = View.GONE
-                    } else {
-                        viewHolder.favouriteImage.visibility = View.VISIBLE
-                    }
+                val wasFavourite = LocalRepository.isFavourite(dataSet[position].filmId)
+                dataSet[position].isFavourite = !wasFavourite
+                if (wasFavourite) {
+                    LocalRepository.deleteMovie(filmId)
+                } else {
+                    LocalRepository.inserMovie(dataSet[position])
                 }
             }
+            notifyItemChanged(position)
             true
         }
     }
-    // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
 
     fun setData(data: List<Movie>) {

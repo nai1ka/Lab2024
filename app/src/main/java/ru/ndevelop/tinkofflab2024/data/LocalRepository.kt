@@ -1,4 +1,4 @@
-package ru.ndevelop.tinkofflab2024
+package ru.ndevelop.tinkofflab2024.data
 
 import android.content.Context
 import androidx.room.Room
@@ -7,7 +7,7 @@ import ru.ndevelop.tinkofflab2024.models.Movie
 import ru.ndevelop.tinkofflab2024.models.MovieDAO
 import ru.ndevelop.tinkofflab2024.models.MovieEntity
 
-object Repository {
+object LocalRepository {
 
     private lateinit var database: AppDatabase
     private lateinit var movieDAO: MovieDAO
@@ -27,7 +27,7 @@ object Repository {
         return movieDAO.isFavourite(filmId)
     }
 
-    suspend fun updateMovie(movie: Movie) {
+    suspend fun inserMovie(movie: Movie) {
         movieDAO.insertMovie(MovieEntity(movie))
     }
 

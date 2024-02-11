@@ -1,63 +1,76 @@
 package ru.ndevelop.tinkofflab2024
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import ru.ndevelop.tinkofflab2024.databinding.ActivityMainBinding
+import ru.ndevelop.tinkofflab2024.ui.SearchableFragment
+import ru.ndevelop.tinkofflab2024.ui.aboutMovie.AboutMovieActivity
+import ru.ndevelop.tinkofflab2024.ui.aboutMovie.AboutMovieFragment
 import ru.ndevelop.tinkofflab2024.ui.favourite.FavouriteListFragment
-import ru.ndevelop.tinkofflab2024.ui.home.MovieListFragment
+import ru.ndevelop.tinkofflab2024.ui.popular.MovieListFragment
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var selectedFragment: SearchableFragment
+    private lateinit var favouriteListFragment: FavouriteListFragment
+    private lateinit var popularListFragment: MovieListFragment
+    private var selectedTab = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            selectedTab = savedInstanceState.getInt("selectedTab", 0)
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var movieListFragment = MovieListFragment()
-        var favouriteListFragment = FavouriteListFragment()
-
-        selectedFragment = movieListFragment
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, selectedFragment)
-            .commit()
-        supportActionBar?.title = "Популярные"
+        popularListFragment = MovieListFragment()
+        popularListFragment.onMovieClickListener = {
+            openInfoAboutFilm(it)
+        }
+        favouriteListFragment = FavouriteListFragment()
+        favouriteListFragment.onMovieClickListener = {
+            openInfoAboutFilm(it)
+        }
+        selectTab()
         supportActionBar?.elevation = 0F
         binding.btnPopular.setOnClickListener {
-            supportActionBar?.title = "Популярные"
-            selectedFragment = movieListFragment
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, selectedFragment)
-                .commit()
+            selectedTab = 0
+            selectTab()
         }
         binding.btnFavourite.setOnClickListener {
-            supportActionBar?.title = "Избранное"
-            selectedFragment = favouriteListFragment
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, selectedFragment)
-                .commit()
+            selectedTab = 1
+            selectTab()
         }
-
 
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("selectedTab", selectedTab)
+        super.onSaveInstanceState(outState)
+    }
 
-        // Checks whether a keyboard is available
-        if (newConfig.orientation === Configuration.ORIENTATION_LANDSCAPE) {
-            Toast.makeText(this, "Landscape", Toast.LENGTH_SHORT).show()
-        } else if (newConfig.orientation === Configuration.ORIENTATION_PORTRAIT) {
-            Toast.makeText(this, "Portrait", Toast.LENGTH_SHORT).show()
-        }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        selectedTab = savedInstanceState.getInt("selectedTab", 0)
+        selectTab()
+    }
+
+    private fun selectTab() {
+        supportActionBar?.title = if (selectedTab == 0) "Популярное" else "Избранное"
+        selectedFragment = if (selectedTab == 0) popularListFragment else favouriteListFragment
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, selectedFragment)
+            .commit()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -77,6 +90,25 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+
         return true
+    }
+
+    private fun openInfoAboutFilm(filmId: Int) {
+        val orientation = this.resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            val myIntent = Intent(
+                this,
+                AboutMovieActivity::class.java
+            )
+            myIntent.putExtra("filmId", filmId)
+            startActivity(myIntent)
+        } else {
+            val aboutMovieFragment = AboutMovieFragment.newInstance(filmId)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.about_film_container, aboutMovieFragment)
+                .commit()
+        }
+
     }
 }
