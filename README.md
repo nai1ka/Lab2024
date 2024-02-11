@@ -13,3 +13,6 @@
 * Использованы шиммеры и индикаторы загрузки
 * Обработка ошибок при загрузке
 
+
+### Видео: [drive.google.com](https://drive.google.com/file/d/125fJB2diIYMTLyFGuJvEFgr2mXWx036I/view?usp=share_link)
+
