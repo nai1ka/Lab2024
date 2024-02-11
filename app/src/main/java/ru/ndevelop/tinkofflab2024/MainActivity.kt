@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun selectTab() {
-        supportActionBar?.title = if (selectedTab == 0) "Популярное" else "Избранное"
+        supportActionBar?.title = if (selectedTab == 0) "Популярные" else "Избранное"
         selectedFragment = if (selectedTab == 0) popularListFragment else favouriteListFragment
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, selectedFragment)
