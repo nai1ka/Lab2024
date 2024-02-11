@@ -11,10 +11,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/baseline_search_24" />
+        android:src="@drawable/baseline_cloud_off_24" />
 
     <TextView
         android:layout_width="match_parent"

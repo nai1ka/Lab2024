@@ -43,6 +43,9 @@ class AboutMovieFragment : Fragment() {
             visibility = View.VISIBLE
             startShimmer()
         }
+        binding.shimmerLayout.apply {
+            visibility = View.VISIBLE
+        }
 
         val filmId = arguments?.getInt(ARG_INT_VALUE)
 
@@ -56,9 +59,8 @@ class AboutMovieFragment : Fragment() {
     fun showFilmInfo(movie: Movie) {
         binding.dataLayout.visibility = View.VISIBLE
         binding.shimmerLayout.visibility = View.GONE
-
         binding.errorLayout.llError.visibility = View.GONE
-        binding.scrollView.visibility = View.VISIBLE
+        binding.posterLayout.visibility = View.VISIBLE
         binding.tvMovieName.text = movie.nameRu
         binding.tvMovieDescription.text = movie.description
         val genresString =
@@ -115,9 +117,9 @@ class AboutMovieFragment : Fragment() {
     }
 
     fun handleError() {
+        binding.posterLayout.visibility = View.GONE
         binding.dataLayout.visibility = View.GONE
         binding.shimmerLayout.visibility = View.GONE
-        binding.scrollView.visibility = View.GONE
         binding.errorLayout.llError.visibility = View.VISIBLE
     }
 
@@ -128,8 +130,10 @@ class AboutMovieFragment : Fragment() {
             handleError()
             return
         }
+        binding.errorLayout.llError.visibility = View.GONE
         binding.dataLayout.visibility = View.GONE
         binding.shimmerLayout.visibility = View.VISIBLE
+        binding.posterLayout.visibility = View.VISIBLE
         Repository.getFilmAbout(filmId, onSuccess = {
             showFilmInfo(it)
         },
@@ -154,7 +158,4 @@ class AboutMovieFragment : Fragment() {
             return fragment
         }
     }
-
-
-
 }

@@ -18,6 +18,10 @@ object WebRepository {
     val webRepositoryScope = CoroutineScope(Dispatchers.IO)
 
     fun getPopularFilms(onSuccess: (List<Movie>) -> Unit, onError: () -> Unit) {
+        if(!isInternetAvailable()){
+            onError()
+            return
+        }
         retrofitClient.getTop("TOP_100_POPULAR_FILMS").enqueue(object : Callback<Response> {
             override fun onResponse(
                 call: Call<Response>,
@@ -42,6 +46,7 @@ object WebRepository {
     fun getFilmAbout(filmId: Int, onSuccess: (Movie) -> Unit, onError: () -> Unit) {
         if(!isInternetAvailable()){
             onError()
+            return
         }
         retrofitClient.getFilmInfo(filmId).enqueue(object : Callback<Movie> {
             override fun onResponse(
