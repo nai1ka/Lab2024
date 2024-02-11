@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout android:id="@+id/ll_error"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,26 +11,39 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/baseline_cloud_off_24" />
-
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginBottom="32dp"
-        android:text="Произошла ошибка при загрузке данных, проверьте подключение к сети" />
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/baseline_cloud_off_24" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:backgroundTint="#0094FF"
-        android:padding="14dp"
-        android:textSize="14sp"
-        app:cornerRadius="100dp"
-        android:text="Повторить" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="32dp"
+                android:text="Произошла ошибка при загрузке данных, проверьте подключение к сети" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="#0094FF"
+                android:padding="14dp"
+                android:textSize="14sp"
+                app:cornerRadius="100dp"
+                android:text="Повторить" />
+        </LinearLayout>
+
+    </ScrollView>
+
+
 </LinearLayout>
