@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="PopularButtonStyle">
+        <!-- Change the text color of the selected item -->
+        <item name="backgroundTint">#DEEFFF</item>
+        <item name="android:textColor">#0094FF</item>
+    </style>
+
+    <style name="FavouriteButtonStyle">
+
+        <!-- Change the text color of the selected item -->
+        <item name="backgroundTint">#0094FF</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+
+</resources>
