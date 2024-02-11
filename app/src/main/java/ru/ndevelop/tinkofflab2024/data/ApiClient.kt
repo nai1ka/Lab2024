@@ -26,7 +26,7 @@ object ApiClient {
 
 interface MyApiEndpointInterface {
     @Headers("x-api-key: e30ffed0-76ab-4dd6-b41f-4c9da2b2735b")
-    @GET("/api/v2.2/films/top")
+    @GET("/api/v2.2/films/top?type=TOP_100_POPULAR_FILMS")
     fun getTop(@Query("type") type: String): Call<Response>
 
     @Headers("x-api-key: e30ffed0-76ab-4dd6-b41f-4c9da2b2735b")
