@@ -84,7 +84,6 @@ class MovieListAdapter(
                             }
                         }
                     } catch (e: Exception) {
-                        //TODO check
                         println(e.message)
                     }
 

@@ -30,6 +30,6 @@
         app:backgroundTint="#0094FF"
         android:padding="14dp"
         android:textSize="14sp"
-        app:cornerRadius="100px"
+        app:cornerRadius="100dp"
         android:text="Повторить" />
 </LinearLayout>
